@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Mascot } from "@/components/Mascot";
-import { PageLoading } from "@/components/ui/PageState";
 import { request, ApiError } from "@/lib/api";
 
-export default function GoogleCallbackPage() {
+function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -53,5 +52,13 @@ export default function GoogleCallbackPage() {
       </div>
       <h1 className="mt-6 text-[24px] font-extrabold text-ink">Logging you in...</h1>
     </div>
+  );
+}
+
+export default function GoogleCallbackPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-dvh items-center justify-center bg-bg"><Mascot size={150} mood="default" /></div>}>
+      <CallbackContent />
+    </Suspense>
   );
 }
