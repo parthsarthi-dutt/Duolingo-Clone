@@ -13,6 +13,14 @@ from .seed.run import seed_if_empty
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    from .database import engine
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        try:
+            conn.execute(text("ALTER TABLE users ALTER COLUMN avatar_color TYPE VARCHAR(2000);"))
+            conn.commit()
+        except Exception:
+            pass
     seed_if_empty()  # first boot creates the schema and the sample course / learner
     yield
 
