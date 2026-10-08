@@ -6,7 +6,8 @@ achievements and a weekly league).
 
 - **Frontend:** Next.js 15 (App Router) · TypeScript · Tailwind CSS · SWR
 - **Backend:** Python · FastAPI · SQLAlchemy 2
-- **Database:** SQLite (schema and seed data created automatically on first start)
+- **Database:** PostgreSQL (via Neon) in production, SQLite locally
+- **Auth:** Google OAuth Integration (JWT-based session management)
 
 ```
 frontend/   Next.js app (UI only; all state lives behind the API)
@@ -42,7 +43,7 @@ cp .env.example .env.local      # optional: only needed if the API is not on loc
 npm run dev
 ```
 
-Open http://localhost:3000. You are signed in as the seeded learner; there is no login.
+Open http://localhost:3000. Click "Continue with Google" to create an account and start learning.
 
 ### Useful commands
 
@@ -263,23 +264,19 @@ An answer submission uses the field that matches the exercise type:
 
 ## Deployment
 
-The two apps deploy independently.
+The application is deployed across three services:
 
-- **Backend** (Render, Railway, or any Python host): root directory `backend`, build command
-  `pip install -r requirements.txt`, start command
-  `uvicorn app.main:app --host 0.0.0.0 --port $PORT`. Set `CORS_ORIGINS` to the frontend's URL.
-- **Frontend** (Vercel or Netlify): root directory `frontend`, and set `NEXT_PUBLIC_API_URL` to
-  the backend's URL.
+1. **Database (Neon)**: A free, serverless PostgreSQL database. It stores all user progress, content, and state permanently.
+2. **Backend (Render)**: Deployed as a Dockerized Web Service. It connects to Neon via the `DATABASE_URL` environment variable. It requires `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `JWT_SECRET`, and `CORS_ORIGIN_REGEX` to be set.
+3. **Frontend (Vercel)**: Deployed automatically from the `main` branch. Requires `NEXT_PUBLIC_API_URL` to point to the Render backend URL.
 
-On hosts with an ephemeral filesystem the SQLite file is recreated and re-seeded whenever the
-service restarts; attach a persistent disk and point `DATABASE_URL` at it to keep progress.
+*Note:* To enable Google OAuth in production, you must whitelist the Vercel callback URL (`https://<your-vercel-domain>/auth/callback`) in the Google Cloud Console.
 
 ---
 
 ## Assumptions
 
-- **One default learner.** Authentication is out of scope, so every request acts as the seeded
-  learner. Rivals on the leaderboard are seeded bot users in the same `users` table.
+- **Authentication:** Fully implemented via Google OAuth 2.0. Users must sign in to save progress. Rivals on the leaderboard are seeded bot users in the same `users` table.
 - **Days are UTC.** Streaks, daily quests and the weekly league use the server's UTC date.
 - **Simulated time.** Each learner has a `day_offset` so day-based behaviour can be demonstrated;
   the developer tools in Settings exist for reviewers and would not ship.
