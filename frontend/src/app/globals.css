@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens. Values are "R G B" triplets so Tailwind can apply opacity.
+ * Dark is the default (it is what the reference app looks like); light is
+ * opt-in from Settings.
+ */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: 19 31 36;
+  --surface: 32 47 54;
+  --line: 55 70 79;
+  --ink: 241 247 251;
+  --ink-soft: 220 230 236;
+  --muted: 82 101 109;
+  --line-shadow: 44 56 63; /* ledge under locked path nodes */
+
+  --primary: 147 211 51;
+  --primary-shadow: 121 185 51;
+  --on-primary: 19 31 36;
+  --macaw: 73 192 248;
+  --macaw-shadow: 24 153 214;
+  --cardinal: 238 85 85;
+  --cardinal-shadow: 216 72 72;
+
+  --selected-bg: 32 47 54;
+  --selected-line: 63 133 167;
+  --selected-ink: 24 153 214;
+  --correct-bg: 32 47 54;
+  --correct-line: 95 132 40;
+  --correct-ink: 121 185 51;
+  --wrong-bg: 32 47 54;
+  --wrong-line: 147 62 69;
+  --wrong-ink: 238 85 85;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: 255 255 255;
+  --surface: 247 247 247;
+  --line: 229 229 229;
+  --ink: 60 60 60;
+  --ink-soft: 75 75 75;
+  --muted: 175 175 175;
+  --line-shadow: 183 183 183;
+
+  --primary: 88 204 2;
+  --primary-shadow: 88 167 0;
+  --on-primary: 255 255 255;
+  --macaw: 28 176 246;
+  --macaw-shadow: 24 153 214;
+  --cardinal: 255 75 75;
+  --cardinal-shadow: 234 43 43;
+
+  --selected-bg: 221 244 255;
+  --selected-line: 132 216 255;
+  --selected-ink: 24 153 214;
+  --correct-bg: 215 255 184;
+  --correct-line: 165 237 110;
+  --correct-ink: 88 167 0;
+  --wrong-bg: 255 223 224;
+  --wrong-line: 255 178 178;
+  --wrong-ink: 234 43 43;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    font-feature-settings: "tnum" 0;
+  }
+
+  button {
+    @apply select-none outline-none;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  textarea:focus-visible,
+  input:focus-visible {
+    @apply ring-2 ring-macaw ring-offset-2 ring-offset-bg;
+  }
+
+  ::selection {
+    background: rgb(var(--macaw) / 0.35);
+  }
+}
+
+@layer components {
+  /* Small-caps label used all over the product: buttons, nav, links. */
+  .label-caps {
+    @apply font-extrabold uppercase tracking-[0.8px];
+  }
+
+  .card {
+    @apply rounded-2xl border-2 border-line;
+  }
+
+  /* A chunky tile that "presses" into its bottom border. */
+  .tile {
+    @apply rounded-xl border-2 border-b-4 border-line bg-bg transition-[transform,border-width,margin] duration-75;
+  }
+  .tile:not(:disabled):active {
+    @apply mt-[2px] translate-y-0 border-b-2;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* "Reduce motion" toggle in Settings. */
+[data-motion="off"] *,
+[data-motion="off"] *::before,
+[data-motion="off"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

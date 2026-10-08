@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# SQLite database: created and seeded automatically on first start
+*.db
+*.db-journal

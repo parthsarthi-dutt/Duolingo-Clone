@@ -1,0 +1,20 @@
+# Reference material supplied with the assignment (not part of the submission)
+/nextjs-duolingo-clone-master-*/
+/Video and Photos-*/
+/Assignment Duolingo Clone.pdf
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python / Backend
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.db
+backend/.env
