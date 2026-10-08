@@ -207,7 +207,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(40), unique=True)
     display_name: Mapped[str] = mapped_column(String(80))
-    avatar_color: Mapped[str] = mapped_column(String(20), default="#1CB0F6")
+    avatar_color: Mapped[str] = mapped_column(String(2000), default="#1CB0F6")
     is_bot: Mapped[bool] = mapped_column(Boolean, default=False)  # seeded leaderboard rival
     created_at: Mapped[datetime] = mapped_column(DateTime)
     course_id: Mapped[int | None] = mapped_column(ForeignKey("courses.id"))
