@@ -9,7 +9,6 @@ import { Providers } from "./providers";
 
 const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
   variable: "--font-nunito",
   display: "swap",
 });
